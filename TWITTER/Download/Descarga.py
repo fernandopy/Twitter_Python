@@ -11,12 +11,14 @@ class Descarga(StreamListener):
     
     
     def on_data(self, data):
+        con = Conexion()
         try:
             json_object = json.loads(data)
+            con.insertTuit(None,None,'prueba2', json.dumps(json_object))
             json_object.keys()
-            key = json_object.keys()
-            lista = ','.join(self.verifica_Columnas(json_object.get(x),x) for x in key)
-            print lista
+            #key = json_object.keys()
+            #lista = ','.join(self.verifica_Columnas(json_object.get(x),x) for x in key)
+            #print lista
         except ValueError, e:
             print "ERROR"
         #print b #se le puso para que se pueda escribir en los archivos
