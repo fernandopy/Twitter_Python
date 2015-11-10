@@ -17,7 +17,8 @@ class Descarga(StreamListener):
             self.download_user(json_object)
             self.download_Coord(json_object)
             self.download_Geo(json_object)
-            #self.download_Place(json_object)
+            self.download_Place(json_object)
+            self.download_Bounding(json_object)
         except ValueError, e:
             print "ERROR"
         #print b #se le puso para que se pueda escribir en los archivos
@@ -124,7 +125,7 @@ class Descarga(StreamListener):
                     lista = ','.join(x for x in lista_keys)
                     con.insertTuit(lista, values,'geo')
                 
-    '''def download_Place(self,json_object= None):
+    def download_Place(self,json_object= None):
         con = Conexion()
         values = []
         lista_keys = []
@@ -134,17 +135,55 @@ class Descarga(StreamListener):
         for col in key:
             if col == 'id':
                 id = json_object.get(col)
-            elif col == 'Place':
+            elif col == 'place':
                 place = json_object.get(col)
-                lista_keys = place.keys()
-                for i in lista_keys:
-                    print i
-                    #values.append(json_object.get(i))
+                key = place.keys()
+                for i in key:
+                    if  i != 'attributes' and i != 'bounding_box':
+                        lista_keys.append(i) 
+                        values.append(place.get(i))
                 
                 lista_keys.append('id_tuit')
                 values.append(id)
                 lista = ','.join(x for x in lista_keys)
+                #print lista
+                #print values
+                con.insertTuit(lista, values,'Place')
                 
-                con.insertTuit(lista, values,'usuarios')'''
-                
-                
+    def download_Bounding(self,json_object= None):
+        con = Conexion()
+        values = []
+        lista_keys = []
+        
+        key = json_object.keys()
+        
+        for col in key:
+            if col == 'id':
+                id = json_object.get(col)
+            elif col == 'place':
+                place = json_object.get(col)
+                key = place.keys()
+                for i in key:
+                    if i == 'bounding_box':
+                        box = place.get(i)
+                        val = box.values()
+                        #print len(val[1][0])
+                        for x in val[1][0]:
+                            val_box = []
+                            list_box=[]
+                            list_box.append('id')
+                            val_box.append(id)
+                            list_box.append('type')
+                            val_box.append(box.get('type'))
+                            list_box.append('longitud')
+                            val_box.append(x[0])
+                            list_box.append('latitud')
+                            val_box.append(x[1])
+                            lista_str = ','.join(x for x in list_box)
+                            con.insertTuit(lista_str, val_box,'Boundings')
+                            lista_str = None 
+                            list_box = None
+                            val_box = None
+                            
+                            
+                    
