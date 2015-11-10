@@ -11,14 +11,13 @@ class Descarga(StreamListener):
     
     
     def on_data(self, data):
-        con = Conexion()
         try:
             json_object = json.loads(data)
-            con.insertTuit(None,None,'prueba2', json.dumps(json_object))
-            json_object.keys()
-            #key = json_object.keys()
-            #lista = ','.join(self.verifica_Columnas(json_object.get(x),x) for x in key)
-            #print lista
+            self.download_Tuits(json_object)
+            self.download_user(json_object)
+            self.download_Coord(json_object)
+            self.download_Geo(json_object)
+            #self.download_Place(json_object)
         except ValueError, e:
             print "ERROR"
         #print b #se le puso para que se pueda escribir en los archivos
@@ -27,8 +26,125 @@ class Descarga(StreamListener):
     def on_error(self, status):
         print status
      
-    def verifica_Columnas(self,tipo = None,col= None):
-        if type(tipo) == dict :
-            return 'HOLAA******'
-        else: 
-            return col
+    def download_Tuits(self,json_object= None):
+        con = Conexion()
+        values = []
+        lista_keys = []
+        key = json_object.keys()
+        for col in key:
+            if col != 'entities' and col != 'geo' and col != 'user' and col != 'place' and col != 'coordinates'and col != 'extended_entities' and col != 'quoted_status':
+                lista_keys.append(col)
+        for i in lista_keys:
+            values.append(json_object.get(i))
+        lista = ','.join(x for x in lista_keys)
+            #values.append(self.get_Values(value))
+        con.insertTuit(lista, values, 'tuits')
+               #print '{0} {1}'.format(col, type(valor)) 
+    def download_user(self,json_object= None):
+        con = Conexion()
+        values = []
+        lista_keys = []
+        
+        key = json_object.keys()
+        
+        for col in key:
+            if col == 'id':
+                id = json_object.get(col)
+            elif col == 'user':
+                usr = json_object.get(col)
+                lista_keys = usr.keys()
+                for i in lista_keys:
+                    values.append(json_object.get(i))
+                
+                lista_keys.append('id_tuit')
+                values.append(id)
+                lista = ','.join(x for x in lista_keys)
+                
+                con.insertTuit(lista, values,'usuarios')
+                
+    def download_Coord(self,json_object=None):            
+       
+        con = Conexion()
+        values = []
+        lista_keys = []
+        
+        key = json_object.keys()
+        
+        for col in key:
+            if col == 'id':
+                id = json_object.get(col)
+            elif col == 'coordinates':
+                if json_object.get(col) != None:
+                    cds = json_object.get(col)
+                    key = cds.keys()
+                    for i in key:
+                        if i == 'type':
+                            lista_keys.append(i)
+                            values.append(cds.get(i))
+                        else:
+                            arr = cds.get(i)
+                            lista_keys.append('latitud')
+                            values.append(arr[1])
+                            lista_keys.append('longitud')
+                            values.append(arr[0])        
+                    #values.append(json_object.get(i))
+                    lista_keys.append('id_tuit')
+                    values.append(id)
+                    lista = ','.join(x for x in lista_keys)
+                    con.insertTuit(lista, values,'coordenadas')
+    
+    def download_Geo(self,json_object=None):            
+       
+        con = Conexion()
+        values = []
+        lista_keys = []
+        
+        key = json_object.keys()
+        
+        for col in key:
+            if col == 'id':
+                id = json_object.get(col)
+            elif col == 'geo':
+                if json_object.get(col) != None:
+                    cds = json_object.get(col)
+                    key = cds.keys()
+                    for i in key:
+                        if i == 'type':
+                            lista_keys.append(i)
+                            values.append(cds.get(i))
+                        else:
+                            arr = cds.get(i)
+                            lista_keys.append('latitud')
+                            values.append(arr[1])
+                            lista_keys.append('longitud')
+                            values.append(arr[0])        
+                    #values.append(json_object.get(i))
+                    lista_keys.append('id_tuit')
+                    values.append(id)
+                    lista = ','.join(x for x in lista_keys)
+                    con.insertTuit(lista, values,'geo')
+                
+    '''def download_Place(self,json_object= None):
+        con = Conexion()
+        values = []
+        lista_keys = []
+        
+        key = json_object.keys()
+        
+        for col in key:
+            if col == 'id':
+                id = json_object.get(col)
+            elif col == 'Place':
+                place = json_object.get(col)
+                lista_keys = place.keys()
+                for i in lista_keys:
+                    print i
+                    #values.append(json_object.get(i))
+                
+                lista_keys.append('id_tuit')
+                values.append(id)
+                lista = ','.join(x for x in lista_keys)
+                
+                con.insertTuit(lista, values,'usuarios')'''
+                
+                
