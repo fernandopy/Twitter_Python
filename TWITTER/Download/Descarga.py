@@ -6,6 +6,7 @@ Created on 01/11/2015
 from tweepy.streaming import StreamListener
 from Conexion_BD.Conexion import Conexion
 import json
+from _dbus_bindings import Array
 
 class Descarga(StreamListener):
     
@@ -14,11 +15,12 @@ class Descarga(StreamListener):
         try:
             json_object = json.loads(data)
             self.download_Tuits(json_object)
-            self.download_user(json_object)
+            self.download_User(json_object)
             self.download_Coord(json_object)
             self.download_Geo(json_object)
             self.download_Place(json_object)
             self.download_Bounding(json_object)
+            self.download_Entities(json_object)
         except ValueError, e:
             print "ERROR"
         #print b #se le puso para que se pueda escribir en los archivos
@@ -41,7 +43,8 @@ class Descarga(StreamListener):
             #values.append(self.get_Values(value))
         con.insertTuit(lista, values, 'tuits')
                #print '{0} {1}'.format(col, type(valor)) 
-    def download_user(self,json_object= None):
+    
+    def download_User(self,json_object= None):
         con = Conexion()
         values = []
         lista_keys = []
@@ -54,13 +57,29 @@ class Descarga(StreamListener):
             elif col == 'user':
                 usr = json_object.get(col)
                 lista_keys = usr.keys()
-                for i in lista_keys:
-                    values.append(json_object.get(i))
                 
+                for i in lista_keys:
+                    if  str(i).find('profile') >= 0 :
+                        s = str(i)
+                        #print s
+                        lista_keys.remove(s)
+                for i in lista_keys:
+                    if str(i).find('default') >= 0:
+                        s = str(i)
+                        #print s
+                        lista_keys.remove(s)
+                for i in lista_keys:
+                    if str(i).find('profile') >= 0:
+                        s = str(i)
+                        #print s
+                        lista_keys.remove(s)
+                for i in lista_keys:         
+                    values.append(json_object.get(i)) 
+                 
                 lista_keys.append('id_tuit')
                 values.append(id)
                 lista = ','.join(x for x in lista_keys)
-                
+                #print len(lista)
                 con.insertTuit(lista, values,'usuarios')
                 
     def download_Coord(self,json_object=None):            
@@ -186,4 +205,41 @@ class Descarga(StreamListener):
                             val_box = None
                             
                             
-                    
+    def download_Entities(self,json_object= None):
+        con = Conexion()
+        values = []
+        lista_keys = []
+        
+        key = json_object.keys()
+        
+        for col in key:
+            if col == 'id':
+                id = json_object.get(col)
+            elif col == 'entities':
+                ent = json_object.get(col)
+                key = ent.keys()
+                for i in key:
+                    #print '{0}{1}'.format(i,type(ent.get(i)))
+                    if 'hashtags' == i:
+                        arr =ent.get(i)
+                        if len(arr) > 0:
+                            for i in range(0,len(arr)):
+                                values_has = []
+                                list_keys = []
+                                
+                                list_keys = arr[i].keys()
+                                list_keys.pop(0)
+                                lista = ','.join(x for x in list_keys)
+                                lista = lista +','+'ind_inicial'+','+'ind_final'+','+'id'       
+                                values_has = arr[i].values()
+                                values_has.append (values_has[0][0])
+                                values_has.append (values_has[0][1])
+                                values_has.pop(0)
+                                values_has.append(id)
+                                con.insertTuit(lista, values_has,'hashtags')
+                                lista=None
+                                values_has = None
+                                list_keys = None
+                            
+                            
+                            
