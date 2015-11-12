@@ -17,9 +17,8 @@ class Descarga(StreamListener):
             self.download_Tuits(json_object)
             self.download_User(json_object)
             self.download_Coord(json_object)
-            self.download_Geo(json_object)
             self.download_Place(json_object)
-            self.download_Bounding(json_object)
+            self.download_Bounding(json_object)#'''
             self.download_Entities(json_object)
         except ValueError, e:
             print "ERROR"
@@ -240,6 +239,29 @@ class Descarga(StreamListener):
                                 lista=None
                                 values_has = None
                                 list_keys = None
-                            
-                            
-                            
+                    elif 'user_mentions' == i:
+                        arr = ent.get(i)
+                        if len(arr) > 0:
+                            for i in range(0,len(arr)):
+                                keys = arr[i].keys()
+                                val_usr = arr[i].values()
+                                keys.pop(1)
+                                keys.append('id_tuit')
+                                keys.append('ind_inicial')
+                                keys.append('ind_final')
+                                lista = ','.join(x for x in keys)
+                                val_usr.append(id)
+                                val_usr.append(val_usr[1][0])
+                                val_usr.append(val_usr[1][1])
+                                val_usr.pop(1)
+                                
+                                con.insertTuit(lista,val_usr,'User_mentions')
+                                lista = None
+                                val_usr = None
+                                keys = None
+                                
+                    elif 'symbols' == i:
+                        arr = ent.get(i)
+                        print arr
+                        
+                    
