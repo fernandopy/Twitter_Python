@@ -10,6 +10,7 @@ from Download.Descarga import Descarga
 
 
 if __name__ == '__main__':
+    
     #Estas variables contienen las credenciales para podres ingresar a la API
     access_token = "3253347468-48d57nPHkARxBKMKl7j9DWueevTNsdpYLykOvIM"
     access_token_secret = "Smpknn1UM7LGE1Qref9B9TRREI2poiYBWlBrUrT0oK3Tz"
@@ -23,3 +24,5 @@ if __name__ == '__main__':
 
     #This line filter Twitter Streams to capture data by the keywords: 'python', 'javascript', 'ruby'
     stream.filter(locations=[-99.36666666,19.05,-98.95,19.6],languages=['es'])
+    
+    
