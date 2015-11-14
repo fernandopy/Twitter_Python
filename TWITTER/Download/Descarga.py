@@ -262,6 +262,6 @@ class Descarga(StreamListener):
                                 
                     elif 'symbols' == i:
                         arr = ent.get(i)
-                        print arr
+                        #print arr
                         
                     
