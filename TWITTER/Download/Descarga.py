@@ -18,8 +18,8 @@ class Descarga(StreamListener):
             self.download_User(json_object)
             self.download_Coord(json_object)
             self.download_Place(json_object)
-            self.download_Bounding(json_object)#'''
-            self.download_Entities(json_object)
+            self.download_Bounding(json_object)
+            self.download_Entities(json_object)#'''
         except ValueError, e:
             print "ERROR"
         #print b #se le puso para que se pueda escribir en los archivos
@@ -35,13 +35,24 @@ class Descarga(StreamListener):
         key = json_object.keys()
         for col in key:
             if col != 'entities' and col != 'geo' and col != 'user' and col != 'place' and col != 'coordinates'and col != 'extended_entities' and col != 'quoted_status':
-                lista_keys.append(col)
-        for i in lista_keys:
-            values.append(json_object.get(i))
+                if col == 'created_at':
+                    created = str(json_object.get(col))
+                    arreglo = created.split(" ")
+                    fecha = '{0}-{1}-{2}'.format(arreglo[5],arreglo[1],arreglo[2])
+                    lista_keys.append ('fecha')
+                    values.append(fecha)
+                    lista_keys.append('hora')
+                    values.append(arreglo[3])
+                    
+                else:
+                    lista_keys.append(col)
+                    values.append(json_object.get(col))
+                
+        #for i in lista_keys:
         lista = ','.join(x for x in lista_keys)
             #values.append(self.get_Values(value))
         con.insertTuit(lista, values, 'tuits')
-               #print '{0} {1}'.format(col, type(valor)) 
+        #print '{0} {1}'.format(col, type(valor)) 
     
     def download_User(self,json_object= None):
         con = Conexion()
