@@ -28,12 +28,12 @@ class Descarga(StreamListener):
     def on_error(self, status):
         print status
      
-    def download_Tuits(self,json_object= None):
+    def download_Tuits(self,json_object= None):#QUITAR TODOS LOS STR
         con = Conexion()
         values = []
         lista_keys = []
         key = json_object.keys()
-        for col in key:
+        for col in key:#verificar si son tipo list o dict
             if col != 'entities' and col != 'geo' and col != 'user' and col != 'place' and col != 'coordinates'and col != 'extended_entities' and col != 'quoted_status':
                 if col == 'created_at':
                     created = str(json_object.get(col))
@@ -45,19 +45,17 @@ class Descarga(StreamListener):
                     values.append(arreglo[3])
                     
                 else:
-                    lista_keys.append(col)
+                    lista_keys.append(col)#construir cadena 
                     values.append(json_object.get(col))
                 
-        #for i in lista_keys:
         lista = ','.join(x for x in lista_keys)
-            #values.append(self.get_Values(value))
         con.insertTuit(lista, values, 'tuits')
-        #print '{0} {1}'.format(col, type(valor)) 
-    
+        
     def download_User(self,json_object= None):
         con = Conexion()
         values = []
         lista_keys = []
+        aux = []
         
         key = json_object.keys()
         
@@ -69,27 +67,15 @@ class Descarga(StreamListener):
                 lista_keys = usr.keys()
                 
                 for i in lista_keys:
-                    if  str(i).find('profile') >= 0 :
-                        s = str(i)
-                        #print s
-                        lista_keys.remove(s)
-                for i in lista_keys:
-                    if str(i).find('default') >= 0:
-                        s = str(i)
-                        #print s
-                        lista_keys.remove(s)
-                for i in lista_keys:
-                    if str(i).find('profile') >= 0:
-                        s = str(i)
-                        #print s
-                        lista_keys.remove(s)
+                    if  str(i).find('profile') < 0 :
+                        aux.append(i)
+                lista_keys = aux
                 for i in lista_keys:         
                     values.append(json_object.get(i)) 
-                 
                 lista_keys.append('id_tuit')
                 values.append(id)
                 lista = ','.join(x for x in lista_keys)
-                #print len(lista)
+               
                 con.insertTuit(lista, values,'usuarios')
                 
     def download_Coord(self,json_object=None):            
