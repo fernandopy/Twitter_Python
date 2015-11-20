@@ -17,7 +17,7 @@ class Descarga(StreamListener):
             json_object = json.loads(data)
             id = json_object.get('id')
             self.download_Tuits(json_object)
-            '''self.download_User(json_object.get('user'),id)
+            self.download_User(json_object.get('user'),id)
             
             coord = json_object.get('coordinates')
             if coord != None:
