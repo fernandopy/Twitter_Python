@@ -3,6 +3,7 @@ Created on 01/11/2015
 
 @author: fer
 '''
+import time
 from tweepy.streaming import StreamListener
 from Conexion_BD.Conexion import Conexion
 import json
@@ -16,7 +17,7 @@ class Descarga(StreamListener):
             json_object = json.loads(data)
             id = json_object.get('id')
             self.download_Tuits(json_object)
-            self.download_User(json_object.get('user'),id)
+            '''self.download_User(json_object.get('user'),id)
             
             coord = json_object.get('coordinates')
             if coord != None:
@@ -49,11 +50,12 @@ class Descarga(StreamListener):
                 if col == 'created_at':
                     created = str(json_object.get(col))
                     arreglo = created.split(" ")
-                    fecha = '{0}-{1}-{2}'.format(arreglo[5],arreglo[1],arreglo[2])
+                    #obtengo la hora con python 
+                    fecha = (time.strftime("%y-%m-%d"))#'{0}-{1}-{2}'.format(arreglo[5],arreglo[1],arreglo[2])
                     lista_keys.append ('fecha')
                     values.append(fecha)
                     lista_keys.append('hora')
-                    values.append(arreglo[3])
+                    values.append(time.strftime("%X"))
                     
                 else:
                     lista_keys.append(col)#construir cadena 
@@ -63,7 +65,7 @@ class Descarga(StreamListener):
         lista = ','.join(x for x in lista_keys)
         #print lista 
         #print values
-        con.insertTuit(lista, values, 'tuits')
+        #con.insertTuit(lista, values, 'tuits')
         
     def download_User(self,json_object= None,id = None):
         con = Conexion()
