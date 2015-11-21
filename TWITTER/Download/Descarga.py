@@ -31,7 +31,6 @@ class Descarga(StreamListener):
             self.download_Entities(json_object.get('entities'),id)#'''
         except ValueError, e:
             print "ERROR"
-        #print b #se le puso para que se pueda escribir en los archivos
         print "------------" 
         
     def on_error(self, status):
@@ -64,8 +63,6 @@ class Descarga(StreamListener):
         #lista_keys = self.quita_Key('str', lista_keys)
         #values = self.get_Valores(lista_keys, json_object)    
         lista = ','.join(x for x in lista_keys)
-        #print lista 
-        #print values
         con.insertTuit(lista, values, 'tuits')
         
     def download_User(self,json_object= None,id = None):
@@ -75,7 +72,7 @@ class Descarga(StreamListener):
         aux = []
         palabras = ['profile','str']
         
-        lista_keys = json_object.keys()
+        lista_keys =self.quitaColumnasNull(json_object.keys(), json_object) 
         for i in palabras:
             lista_keys = self.quita_Key(i,lista_keys)
         
@@ -91,7 +88,7 @@ class Descarga(StreamListener):
         con = Conexion()
         values = []
         lista_keys = []
-        key = json_object.keys()
+        key = self.quitaColumnasNull(json_object.keys(), json_object)
         for i in key:
             if i == 'type':
                 lista_keys.append(i)
@@ -144,7 +141,7 @@ class Descarga(StreamListener):
         values = []
         lista_keys = []
         
-        key = json_object.keys()
+        key = self.quitaColumnasNull(json_object.keys(), json_object)
         
         for i in key:
             if type(json_object.get(i)) != dict and type(json_object.get(i)) != list:
@@ -245,6 +242,13 @@ class Descarga(StreamListener):
         aux = []
         for i in lista_keys:
             aux.append(json_object.get(i))
+        return aux
+    
+    def quitaColumnasNull(self,lista_keys = None,json_object = None):#este metodo sirve para quetar las columnas que esten vacias
+        aux =[]
+        for i in lista_keys:
+            if json_object.get(i) != None:
+                aux.append(i)
         return aux
             
         
