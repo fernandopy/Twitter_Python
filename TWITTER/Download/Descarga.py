@@ -17,15 +17,16 @@ class Descarga(StreamListener):
             json_object = json.loads(data)
             id = json_object.get('id')
             self.download_Tuits(json_object)
-            '''self.download_User(json_object.get('user'),id)
+            self.download_User(json_object.get('user'),id)
             
             coord = json_object.get('coordinates')
             if coord != None:
                 self.download_Coord(coord,id)
             
             place = json_object.get('place')
-            self.download_Place(place,id)
-            self.download_Bounding(place.get('bounding_box') , id)
+            if place != None:
+                self.download_Place(place,id)
+                self.download_Bounding(place.get('bounding_box') , id)
             
             self.download_Entities(json_object.get('entities'),id)#'''
         except ValueError, e:
@@ -65,7 +66,7 @@ class Descarga(StreamListener):
         lista = ','.join(x for x in lista_keys)
         #print lista 
         #print values
-        #con.insertTuit(lista, values, 'tuits')
+        con.insertTuit(lista, values, 'tuits')
         
     def download_User(self,json_object= None,id = None):
         con = Conexion()
@@ -142,7 +143,9 @@ class Descarga(StreamListener):
         con = Conexion()
         values = []
         lista_keys = []
+        
         key = json_object.keys()
+        
         for i in key:
             if type(json_object.get(i)) != dict and type(json_object.get(i)) != list:
                 lista_keys.append(i) 
@@ -231,7 +234,7 @@ class Descarga(StreamListener):
             list_keys = None
                             
                     
-    def quita_Key (self,cadena = None,lista_keys = None):
+    def quita_Key (self,cadena = None,lista_keys = None):#sirve para quitar las columnas que no quiero
         aux = []
         for j in lista_keys:
             if  str(j).find(cadena) < 0 :
