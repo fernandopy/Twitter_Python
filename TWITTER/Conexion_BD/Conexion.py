@@ -37,10 +37,10 @@ class Conexion():
         #{} si esta vacio lo deja en el orden en que estan en contenido del arreglo values solamente funciona en python 2.7
         #print query
         try:
-            #print query
+            print query
             cur.execute(query,values)
             con.commit()
         except psycopg2.DatabaseError, e:
-            print 'Error %s' % e
+            print 'Error BASE %s' % e
         con.close()
 

@@ -16,8 +16,12 @@ class Descarga(StreamListener):
         try:
             json_object = json.loads(data)
             id = json_object.get('id')
-            self.download_Tuits(json_object)
-            self.download_User(json_object.get('user'),id)
+            tuit = json_object
+            if tuit != None:
+                self.download_Tuits(json_object)
+            user = json_object.get('user')
+            if user != None:
+                self.download_User(user,id)
             
             coord = json_object.get('coordinates')
             if coord != None:
@@ -28,7 +32,9 @@ class Descarga(StreamListener):
                 self.download_Place(place,id)
                 self.download_Bounding(place.get('bounding_box') , id)
             
-            self.download_Entities(json_object.get('entities'),id)#'''
+            ent = json_object.get('entities')
+            if ent != None:
+                self.download_Entities(json_object.get('entities'),id)#'''
         except ValueError, e:
             print "ERROR"
         print "------------" 
