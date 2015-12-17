@@ -200,7 +200,7 @@ class Descarga(StreamListener):
                     self.hash_users(arr, id,i,None)
                     
             elif 'user_mentions' == i:
-                arr = json_object.get(i)
+                arr = json_object.get(i)#devuelve dict
                 if len(arr) > 0:
                     self.hash_users(arr, id,i,'str')
                     
@@ -209,29 +209,28 @@ class Descarga(StreamListener):
                     #print arr
     def hash_users(self,arr = None,id = None,tabla = None,remove_cad = None):
         con = Conexion()
-        for i in range(0,len(arr)):
+        
+        for i in range(0,len(arr)):# esta dentro del for por que puede haber muchos hastags o user mentios por tuit
             values = []
             list_keys = []
             
             list_keys = arr[i].keys()                     
             values = arr[i].values()
-            
-                                    
             list_keys = self.quita_Key('indices',list_keys)
             
-            if remove_cad != None:
+            if remove_cad != None:#quito str de user mentions
                 list_keys = self.quita_Key(remove_cad,list_keys)
-            
+                
             lista = ','.join(x for x in list_keys)
-            lista = lista +','+'ind_inicial'+','+'ind_final'+','+'id'       
+            lista = lista +','+'ind_inicial'+','+'ind_final'+','+'id_tuits'       
             #necesito el valor de inidice que es un arreglo [a,b] despues de sacar sus valores a y b ahora si pop
-            for x in range(0,len(values)-1):
+            for x in range(0,len(values)-1):#esto es para los indices
                 if type(values[x]) == list:
                     values.append(values[x][0])
                     values.append(values[x][1])
                     values.pop(x)
             values.append(id)
-            #con.insertTuit(lista, values,tabla)
+            con.insertTuit(lista, values,tabla)
             lista=None
             values = None
             list_keys = None
@@ -255,7 +254,7 @@ class Descarga(StreamListener):
         for i in lista_keys:
             if json_object.get(i) != None:
                 aux.append(i)
-        return aux
+        return aux#'''
             
         
         
