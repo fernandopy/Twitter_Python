@@ -216,11 +216,17 @@ class Descarga(StreamListener):
             
             list_keys = arr[i].keys()                     
             values = arr[i].values()
-            list_keys = self.quita_Key('indices',list_keys)
+            
             
             if remove_cad != None:#quito str de user mentions
+                for j in list_keys:#ARREGLAR ESTO ****************
+                    if str(j).find(remove_cad) >0:
+                        ind = list_keys.index(str(j))
+                        print(values.pop(ind))#'''
                 list_keys = self.quita_Key(remove_cad,list_keys)
                 
+            list_keys = self.quita_Key('indices',list_keys)
+            
             lista = ','.join(x for x in list_keys)
             lista = lista +','+'ind_inicial'+','+'ind_final'+','+'id_tuits'       
             #necesito el valor de inidice que es un arreglo [a,b] despues de sacar sus valores a y b ahora si pop
