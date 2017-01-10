@@ -13,10 +13,10 @@ if __name__ == '__main__':
     
     
     #Estas variables contienen las credenciales para podres ingresar a la API
-    access_token = "3253347468-48d57nPHkARxBKMKl7j9DWueevTNsdpYLykOvIM"
-    access_token_secret = "Smpknn1UM7LGE1Qref9B9TRREI2poiYBWlBrUrT0oK3Tz"
-    consumer_key = "B4jE08jICKyeNh7aob8fACuF2"
-    consumer_secret = "DGnEKSAaWtagLESCD4QktYX9JIDjngjr7NAJ0e3erIzJg0aH4L"
+    access_token = "****"
+    access_token_secret = "*****"
+    consumer_key = "*******"
+    consumer_secret = "*****"
 
     l = Descarga()
     auth = OAuthHandler(consumer_key, consumer_secret)
