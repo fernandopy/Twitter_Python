@@ -261,6 +261,9 @@ class Descarga(StreamListener):
             if json_object.get(i) != None:
                 aux.append(i)
         return aux#'''
+
+
+
             
         
         
