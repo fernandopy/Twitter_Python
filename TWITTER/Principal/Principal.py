@@ -17,7 +17,6 @@ if __name__ == '__main__':
     access_token_secret = "*****"
     consumer_key = "*******"
     consumer_secret = "*****"
-
     l = Descarga()
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
